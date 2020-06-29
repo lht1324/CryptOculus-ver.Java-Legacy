@@ -30,6 +30,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -361,13 +363,35 @@ public class MainActivity extends AppCompatActivity {
 
         if (URL.equals(huobiAddress)) {
             TickerFormatHuobi tickerFormatHuobi = gson.fromJson(response, TickerFormatHuobi.class);
-            JSONArray temp = tickerFormatHuobi.data;
-            Type type = new TypeToken<ArrayList<TickerHuobi>>(){}.getType();
-            // List<TickerHuobi> tempTickersHuobi = gson.fromJson(response, type);
+            JSONArray tempJArray = tickerFormatHuobi.data;
+            /* Type type = new TypeToken<ArrayList<TickerHuobi>>(){}.getType();
+            // List<TickerHuobi> tempTickersHuobi = gson.fromJson(response, type); */
             ArrayList<TickerHuobi> tickersHuobi = new ArrayList<TickerHuobi>();
             // tickersHuobi.addAll(tempTickersHuobi);
-            for (int i = 0; i < temp.length(); i++) {
-            
+            for (int i = 0; i < tempJArray.length(); i++) {
+                try {
+                    JSONObject object = tempJArray.getJSONObject(i);
+
+                    if (object.getString("simbol").contains("krw")) {
+                        TickerHuobi temp = new TickerHuobi();
+
+                        temp.simbol = object.getString("simbol");
+                        temp.open = object.getString("open");
+                        temp.high = object.getString("high");
+                        temp.low = object.getString("low");
+                        temp.close = object.getString("close");
+                        temp.amount = object.getString("amount");
+                        temp.vol = object.getString("vol");
+                        temp.count = object.getString("count");
+                        temp.bid = object.getString("bid");
+                        temp.bidSize = object.getString("bidSize");
+                        temp.ask = object.getString("ask");
+                        temp.askSize = object.getString("askSize");
+
+                        tickersHuobi.add(temp);
+                    }
+                } catch(JSONException e) {
+                }
             }
 
             /* if (tickerFormatHuobi.data == null)
@@ -376,15 +400,10 @@ public class MainActivity extends AppCompatActivity {
                 println("tickerFormatHuobi.data.get(" + i + ").simbol = " + tickerFormatHuobi.data.get(i).simbol);
             } // 데이터 갯수는 479개.
             // 전부 null이다.
-            // 잘못 받았네 시발
-            // 형식 바꿔라 */
-
-            for (int i = 0; i < tickerFormatHuobi.data.size(); i++) {
-                TickerHuobi temp = tickerFormatHuobi.data.get(i);
-                if (temp.simbol.contains("krw"))
-                    tickersHuobi.add(temp);
-            } // 어차피 String이잖아?
-            // 그럼 싹 다 String으로 긁어와서 tickersHuobi.get(i)에다 박아버려
+            // 잘못 받았네
+            // 형식 바꿔라
+            // 어차피 String이잖아?
+            // 그럼 싹 다 String으로 긁어와서 tickersHuobi.get(i)에다 박아버려 */
 
             coinInfosHuobi = arrayMaker.makeArrayHuobi(tickersHuobi);
 
