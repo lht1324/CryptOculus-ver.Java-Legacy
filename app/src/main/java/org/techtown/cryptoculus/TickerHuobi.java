@@ -1,7 +1,9 @@
 package org.techtown.cryptoculus;
 
-public class TickerHuobi {
-    String simbol;
+import java.io.Serializable;
+
+public class TickerHuobi implements Serializable {
+    String symbol;
     String open;
     String high;
     String low;

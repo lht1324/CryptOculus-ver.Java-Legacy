@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     Spinner spinner;
     Button button;
-    int count = 0;
     ArrayAdapter<String> spinnerAdapter;
     boolean refreshedCoinone = false;
     boolean refreshedBithumb = false;
@@ -307,7 +308,6 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        println("response = " + response);
                         println("응답 -> " + response);
 
                         responseProcess(response);
@@ -318,10 +318,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         println("에러 -> " + error.getMessage());
-                        count++;
                     }
                 }
-        );
+        ) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String> ();
+                return params;
+            }
+        };
 
         return request;
     }
@@ -362,48 +366,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (URL.equals(huobiAddress)) {
+            println("response => " + response);
             TickerFormatHuobi tickerFormatHuobi = gson.fromJson(response, TickerFormatHuobi.class);
-            JSONArray tempJArray = tickerFormatHuobi.data;
-            /* Type type = new TypeToken<ArrayList<TickerHuobi>>(){}.getType();
-            // List<TickerHuobi> tempTickersHuobi = gson.fromJson(response, type); */
+            // Expected BEGIN_OBJECT but was BEGIN_ARRAY (Object를 예상했는데 Array가 왔다)
+            // symbol을 simbol로 오타를 쳤으니 안 들어오지...
             ArrayList<TickerHuobi> tickersHuobi = new ArrayList<TickerHuobi>();
-            // tickersHuobi.addAll(tempTickersHuobi);
-            for (int i = 0; i < tempJArray.length(); i++) {
-                try {
-                    JSONObject object = tempJArray.getJSONObject(i);
 
-                    if (object.getString("simbol").contains("krw")) {
-                        TickerHuobi temp = new TickerHuobi();
-
-                        temp.simbol = object.getString("simbol");
-                        temp.open = object.getString("open");
-                        temp.high = object.getString("high");
-                        temp.low = object.getString("low");
-                        temp.close = object.getString("close");
-                        temp.amount = object.getString("amount");
-                        temp.vol = object.getString("vol");
-                        temp.count = object.getString("count");
-                        temp.bid = object.getString("bid");
-                        temp.bidSize = object.getString("bidSize");
-                        temp.ask = object.getString("ask");
-                        temp.askSize = object.getString("askSize");
-
-                        tickersHuobi.add(temp);
-                    }
-                } catch(JSONException e) {
-                }
-            }
-
-            /* if (tickerFormatHuobi.data == null)
-                println("tickerFormatHuobi's data is null");
             for (int i = 0; i < tickerFormatHuobi.data.size(); i++) {
-                println("tickerFormatHuobi.data.get(" + i + ").simbol = " + tickerFormatHuobi.data.get(i).simbol);
-            } // 데이터 갯수는 479개.
-            // 전부 null이다.
-            // 잘못 받았네
-            // 형식 바꿔라
-            // 어차피 String이잖아?
-            // 그럼 싹 다 String으로 긁어와서 tickersHuobi.get(i)에다 박아버려 */
+                TickerHuobi ticker = tickerFormatHuobi.data.get(i);
+
+                if (ticker.symbol.contains("krw"))
+                    tickersHuobi.add(ticker);
+            }
 
             coinInfosHuobi = arrayMaker.makeArrayHuobi(tickersHuobi);
 
@@ -417,7 +391,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-        // 건드린 것도 없는데 어댑터가 맛이 가면 폐지 확인용 코드 주석 해제하고 실행해보기
         adapter.notifyDataSetChanged();
         spinnerAdapter.notifyDataSetChanged();
     }
