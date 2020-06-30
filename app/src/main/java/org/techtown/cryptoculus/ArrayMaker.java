@@ -338,14 +338,18 @@ public class ArrayMaker {
         coinInfos.add(new CoinInfoHuobi(currencysHuobi.fit, "FIT / FIT 토큰", R.drawable.fit));
         coinInfos.add(new CoinInfoHuobi(currencysHuobi.skm, "SKM / 스크럼블 네트워크", R.drawable.skm));
 
-        for (int i = 0; i < coinInfos.size(); i++) {
-            coinInfos.get(i).setCoinData(tickersHuobi.get(i));
-            println("Huobi coinInfos name check " + i  + " - " + coinInfos.get(i).getCoinName());
-            // 아예 출력 안 되는데?
-            // arrayMakerUpbit 자체가 실행 안 되는 거 같은데
-        } // 이건 순서가 달라지면 맛이 간다
-        // 그냥 따로따로 구분해서 CurrencysHuobi에 넣는 게 나을 거 같다
-
+        for (int i = 0; i < coinInfos.size(); i++) { // Huobi 독자 규격에서 오는 에러 제거 (E7 = X 10000000)
+            TickerHuobi ticker = coinInfos.get(i).getCoinData();
+            if (ticker.open.contains("E7"))
+                ticker.open = Double.toString((Double.parseDouble(ticker.open.replace("E7", "")) * 10000000));
+            if (ticker.close.contains("E7"))
+                ticker.close = Double.toString((Double.parseDouble(ticker.close.replace("E7", "")) * 10000000));
+            if (ticker.high.contains("E7"))
+                ticker.high = Double.toString((Double.parseDouble(ticker.high.replace("E7", "")) * 10000000));
+            if (ticker.low.contains("E7"))
+                ticker.low = Double.toString((Double.parseDouble(ticker.low.replace("E7", "")) * 10000000));
+            coinInfos.get(i).setCoinData(ticker);
+        }
         if (restartApp) {
             for (int i = 0; i < coinInfos.size(); i++)
                 coinInfos.get(i).setCoinViewCheck(pref.getBoolean(coinInfos.get(i).getCoinName(), true));

@@ -70,12 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // 추가해야 하는 것
-    // 정렬 기능(드래그든 뭐든), 옵션에서 체크된 것들 가장 위에 보이게 하는 기능
-    // 그냥 버튼 넣어서 인터넷 접속하는 형식으로 만들까?
-    // SQLite로 coinViewCheck값 저장 (onBackPressed 실행 시)
-    // OnCreate에서 DB에 저장된 걸 읽어서 Array에 저장
-    // 아마 boolean[]으로 저장해야 할 것 같다
-    // 시작할 때 저장한 걸 읽은 뒤 for문으로 setCoinViewCheck() 실행
+    // 정렬된 순서 저장 후 불러오기(마무리)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         spinner = findViewById(R.id.spinner);
         button = findViewById(R.id.button);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -127,6 +121,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("restartCheck", MODE_PRIVATE);
         restartApp = pref.getBoolean("restartApp", false);
 
+        if (restartApp) {
+            pref = getSharedPreferences("URL", MODE_PRIVATE);
+            URL = pref.getString("URL", coinoneAddress);
+        }
+
         getData();
 
         init();
@@ -156,16 +155,13 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         SharedPreferences pref;
 
-        // 거래소 별로 번호로 구분한 다음에 (URL로 구분해도 되고)
-        // 번호로 구분하면 switch case 사용 가능
-        // 꺼지기 전에 URL로 구분해서 sharedPreference에 Int로 저장해서 거래소 켰을 때 불러오는 기능 추가하자
         pref = getSharedPreferences("saveCoinone", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
         if (!isEmpty(coinInfosCoinone)) {
-            for (int i = 0; i < coinInfosCoinone.size(); i++) {
+            for (int i = 0; i < coinInfosCoinone.size(); i++)
                 editor.putBoolean(coinInfosCoinone.get(i).getCoinName(), coinInfosCoinone.get(i).getCoinViewCheck());
-            }
+
             editor.commit();
         }
 
@@ -173,9 +169,9 @@ public class MainActivity extends AppCompatActivity {
         editor = pref.edit();
 
         if (!isEmpty(coinInfosBithumb)) {
-            for (int i = 0; i < coinInfosBithumb.size(); i++) {
+            for (int i = 0; i < coinInfosBithumb.size(); i++)
                 editor.putBoolean(coinInfosBithumb.get(i).getCoinName(), coinInfosBithumb.get(i).getCoinViewCheck());
-            }
+
             editor.commit();
         }
 
@@ -183,11 +179,16 @@ public class MainActivity extends AppCompatActivity {
         editor = pref.edit();
 
         if (!isEmpty(coinInfosHuobi)) {
-            for (int i = 0; i < coinInfosHuobi.size(); i++) {
+            for (int i = 0; i < coinInfosHuobi.size(); i++)
                 editor.putBoolean(coinInfosHuobi.get(i).getCoinName(), coinInfosHuobi.get(i).getCoinViewCheck());
-            }
+
             editor.commit();
         }
+
+        pref = getSharedPreferences("URL", Activity.MODE_PRIVATE);
+        editor = pref.edit();
+        editor.putString("URL", URL);
+        editor.commit();
 
         pref = getSharedPreferences("restartCheck", Activity.MODE_PRIVATE);
         editor = pref.edit();
@@ -411,10 +412,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    public void println(String data) {
-        Log.d("MainActivity", data);
-    }
-
     public static boolean isEmpty(Object object) {
         if (object == null)
             return true;
@@ -432,5 +429,9 @@ public class MainActivity extends AppCompatActivity {
             return (((Object[]) object).length == 0);
         }
         return false;
+    }
+
+    public void println(String data) {
+        Log.d("MainActivity", data);
     }
 }

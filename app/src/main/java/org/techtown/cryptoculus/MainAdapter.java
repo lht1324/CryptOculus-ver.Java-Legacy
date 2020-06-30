@@ -117,6 +117,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
 
                 textView2.setText("현재가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().close)) + "원");
                 textView3.setText("거래량 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().amount)));
+
                 textView4.setText("시가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().open)) + "원");
                 textView5.setText("종가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().close)) + "원");
                 textView6.setText("고가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().high)) + "원");

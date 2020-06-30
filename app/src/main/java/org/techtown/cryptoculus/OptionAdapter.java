@@ -23,7 +23,7 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
 
     String coinoneAddress = "https://api.coinone.co.kr/ticker?currency=all";
     String bithumbAddress = "https://api.bithumb.com/public/ticker/ALL_KRW";
-    String huobiAddress = "https://api.huobi.com/v1/ticker?markets=krw-";
+    String huobiAddress = "https://api-cloud.huobi.co.kr/market/tickers";
     String URL = coinoneAddress; // 코인원인지 빗썸 상태인지 구분하는데 사용
 
     private DataTransferOption mCallback;
@@ -54,11 +54,11 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
             checkedTextView.setChecked(coinInfo.getCoinViewCheck());
         }
 
-        public void setItemHuobi(Object coinInfoObject) {
-            CoinInfoHuobi coinInfo = (CoinInfoHuobi) coinInfoObject;
+        public void setItemHuobi(CoinInfoHuobi coinInfo) {
             imageView.setImageResource(coinInfo.getCoinImageIndex());
             checkedTextView.setText(coinInfo.getCoinName());
             checkedTextView.setChecked(coinInfo.getCoinViewCheck());
+            Log.d("OptionAdapter", coinInfo.getCoinName() + " in coinInfosHuobi");
         }
     }
 
