@@ -255,7 +255,7 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder
         this.notifyDataSetChanged();
     }
 
-    public ArrayList<Object> getCoinInfos() {
+    public ArrayList<Object> getSortedCoinInfos() {
         if (URL.equals(coinoneAddress)) {
             for (int i = 0; i < filteredCoinInfos.size(); i++) {
                 String temp1 = ((CoinInfoCoinone) filteredCoinInfos.get(i)).getCoinName();

@@ -145,8 +145,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        final int finalPosition = position;
-
         if (URL.equals(coinoneAddress))
             viewHolder.setItemCoinone((CoinInfoCoinone) coinInfos.get(position));
 

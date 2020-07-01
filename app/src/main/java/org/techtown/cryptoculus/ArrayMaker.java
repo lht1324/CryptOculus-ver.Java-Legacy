@@ -103,7 +103,20 @@ public class ArrayMaker {
         coinInfos.add(new CoinInfoCoinone(currencyList.ksc, "케이스타라이브", R.drawable.ksc));
         coinInfos.add(new CoinInfoCoinone(currencyList.wiken, "위드", R.drawable.wiken));
 
-        if (restartApp) {
+        if (restartApp && !isEmpty(coinInfosCoinone)) {
+            int[] getPositions = new int[coinInfos.size()];
+            ArrayList<CoinInfoCoinone> temp = new ArrayList<CoinInfoCoinone>();
+
+            for (int i = 0; i < coinInfos.size(); i++) {
+                getPositions[i] = pref.getInt(coinInfos.get(i).getCoinName() + "position", 0);
+                temp.add(null);
+            }
+
+            for (int i = 0; i < coinInfos.size(); i++)
+                temp.set(getPositions[i], coinInfos.get(i));
+
+            coinInfos = temp;
+
             for (int i = 0; i < coinInfos.size(); i++)
                 coinInfos.get(i).setCoinViewCheck(pref.getBoolean(coinInfos.get(i).getCoinName(), true));
 
@@ -113,7 +126,8 @@ public class ArrayMaker {
 
         if (refreshedCoinone) {
             for (int i = 0; i < coinInfos.size(); i++) {
-                String temp1 = coinInfosCoinone.get(i).getCoinName();
+                String temp1 = coinInfosCoinone.get(i).getCoinName(); // 이거 응용하면 될 거 같은데?
+                // int로 position 배열을 만든 다음에 그걸로 position을 저장해서 이걸로 바꿔준다
                 String temp2 = coinInfos.get(i).getCoinName();
 
                 if (!(temp1.equals(temp2))) { // 순서가 바뀐 것
@@ -233,7 +247,20 @@ public class ArrayMaker {
         coinInfos.add(new CoinInfoBithumb(currencyList.XEM, "XEM / 넴", R.drawable.xem));
         coinInfos.add(new CoinInfoBithumb(currencyList.BHP, "BHP / 비에이치피", R.drawable.bhp));
 
-        if (restartApp) {
+        if (restartApp && !isEmpty(coinInfosBithumb)) {
+            int[] getPositions = new int[coinInfos.size()];
+            ArrayList<CoinInfoBithumb> temp = new ArrayList<CoinInfoBithumb>();
+
+            for (int i = 0; i < coinInfos.size(); i++) {
+                getPositions[i] = pref.getInt(coinInfos.get(i).getCoinName() + "position", 0);
+                temp.add(null);
+            }
+
+            for (int i = 0; i < coinInfos.size(); i++)
+                temp.set(getPositions[i], coinInfos.get(i));
+
+            coinInfos = temp;
+
             for (int i = 0; i < coinInfos.size(); i++)
                 coinInfos.get(i).setCoinViewCheck(pref.getBoolean(coinInfos.get(i).getCoinName(), true));
 
@@ -338,8 +365,9 @@ public class ArrayMaker {
         coinInfos.add(new CoinInfoHuobi(currencysHuobi.fit, "FIT / FIT 토큰", R.drawable.fit));
         coinInfos.add(new CoinInfoHuobi(currencysHuobi.skm, "SKM / 스크럼블 네트워크", R.drawable.skm));
 
-        for (int i = 0; i < coinInfos.size(); i++) { // Huobi 독자 규격에서 오는 에러 제거 (E7 = X 10000000)
+        for (int i = 0; i < coinInfos.size(); i++) { // Huobi API 독자 규격에서 오는 에러 제거 (E7 = * 10000000)
             TickerHuobi ticker = coinInfos.get(i).getCoinData();
+
             if (ticker.open.contains("E7"))
                 ticker.open = Double.toString((Double.parseDouble(ticker.open.replace("E7", "")) * 10000000));
             if (ticker.close.contains("E7"))
@@ -348,13 +376,29 @@ public class ArrayMaker {
                 ticker.high = Double.toString((Double.parseDouble(ticker.high.replace("E7", "")) * 10000000));
             if (ticker.low.contains("E7"))
                 ticker.low = Double.toString((Double.parseDouble(ticker.low.replace("E7", "")) * 10000000));
+
             coinInfos.get(i).setCoinData(ticker);
         }
-        if (restartApp) {
-            for (int i = 0; i < coinInfos.size(); i++)
-                coinInfos.get(i).setCoinViewCheck(pref.getBoolean(coinInfos.get(i).getCoinName(), true));
 
-            if (!isEmpty(coinInfosCoinone) && !isEmpty(coinInfosBithumb) && !isEmpty(coinInfosHuobi));
+        if (restartApp && !isEmpty(coinInfosHuobi)) {
+            int[] getPositions = new int[coinInfos.size()];
+            ArrayList<CoinInfoHuobi> temp = new ArrayList<CoinInfoHuobi>();
+
+            for (int i = 0; i < coinInfos.size(); i++) {
+                getPositions[i] = pref.getInt(coinInfos.get(i).getCoinName() + "position", 0);
+                println("getPositions[" + i + "] = " + getPositions[i]);
+                temp.add(null);
+            }
+
+            for (int i = 0; i < coinInfos.size(); i++)
+                temp.set(getPositions[i], coinInfos.get(i));
+
+            coinInfos = temp;
+
+            for (int i = 0; i < coinInfos.size(); i++)
+                coinInfos.get(i).setCoinViewCheck(pref.getBoolean(coinInfos.get(i).getCoinName(), true)); // 에러 위치
+
+            if (!isEmpty(coinInfosCoinone) && !isEmpty(coinInfosBithumb) && !isEmpty(coinInfosHuobi))
                 restartApp = false;
         }
 
@@ -377,134 +421,6 @@ public class ArrayMaker {
 
         return coinInfos;
     }
-
-    /* public ArrayList<CoinInfoHuobi> makeArrayHuobi(ArrayList<TickerHuobi> tickersHuobi) {
-        ArrayList<CoinInfoHuobi> coinInfos = new ArrayList<CoinInfoHuobi>();
-        SharedPreferences pref = mContext.getSharedPreferences("saveUpbit", MODE_PRIVATE);
-
-        coinInfos.add(new CoinInfoHuobi("BTC / 비트코인", R.drawable.btc));
-        coinInfos.add(new CoinInfoHuobi("ETH / 이더리움", R.drawable.eth));
-        coinInfos.add(new CoinInfoHuobi("XRP / 리플", R.drawable.xrp));
-        coinInfos.add(new CoinInfoHuobi("ADA / 에이다", R.drawable.ada));
-        coinInfos.add(new CoinInfoHuobi("QKC / 쿼크체인", R.drawable.qkc));
-        coinInfos.add(new CoinInfoHuobi("BCH / 비트코인 캐시", R.drawable.bch));
-        coinInfos.add(new CoinInfoHuobi("BSV / 비트코인에스브이", R.drawable.bsv));
-        coinInfos.add(new CoinInfoHuobi("EOS / 이오스", R.drawable.eos));
-        coinInfos.add(new CoinInfoHuobi("TFUEL / 쎄타퓨엘", R.drawable.tfuel));
-        coinInfos.add(new CoinInfoHuobi("TRX / 트론", R.drawable.trx));
-        coinInfos.add(new CoinInfoHuobi("HBAR / 헤데라해시그래프", R.drawable.hbar));
-        coinInfos.add(new CoinInfoHuobi("IOST / 아이오에스티", R.drawable.iost));
-        coinInfos.add(new CoinInfoHuobi("ZIL / 질리카", R.drawable.zil));
-        coinInfos.add(new CoinInfoHuobi("ONG / 온돌로지가스", R.drawable.ong));
-        coinInfos.add(new CoinInfoHuobi("STRAT / 스트라티스", R.drawable.strat));
-        coinInfos.add(new CoinInfoHuobi("MLK / 밀크", R.drawable.mlk));
-        coinInfos.add(new CoinInfoHuobi("XLM / 스텔라루멘", R.drawable.xlm));
-        coinInfos.add(new CoinInfoHuobi("ANKR / 앵커", R.drawable.ankr));
-        coinInfos.add(new CoinInfoHuobi("ONT / 온톨로지", R.drawable.ont));
-        coinInfos.add(new CoinInfoHuobi("POLY / 폴리매쓰", R.drawable.poly));
-        coinInfos.add(new CoinInfoHuobi("ELF / 엘프", R.drawable.elf));
-        coinInfos.add(new CoinInfoHuobi("TT / 썬더토큰", R.drawable.tt));
-        coinInfos.add(new CoinInfoHuobi("THETA / 쎄타토큰", R.drawable.theta));
-        coinInfos.add(new CoinInfoHuobi("GRS / 그로스톨코인", R.drawable.grs));
-        coinInfos.add(new CoinInfoHuobi("MBL / 무비블록", R.drawable.mbl));
-        coinInfos.add(new CoinInfoHuobi("SC / 시아코인", R.drawable.sc));
-        coinInfos.add(new CoinInfoHuobi("ARK / 아크", R.drawable.ark));
-        coinInfos.add(new CoinInfoHuobi("TSHP / 트웰브쉽스", R.drawable.tshp));
-        coinInfos.add(new CoinInfoHuobi("TTC / 티티씨", R.drawable.ttc));
-        coinInfos.add(new CoinInfoHuobi("BTG / 비트코인골드", R.drawable.btg));
-        coinInfos.add(new CoinInfoHuobi("VET / 비체인", R.drawable.vet));
-        coinInfos.add(new CoinInfoHuobi("WAXP / 왁스", R.drawable.waxp));
-        coinInfos.add(new CoinInfoHuobi("SOLVE / 솔브케어", R.drawable.solve));
-        coinInfos.add(new CoinInfoHuobi("ETC / 이더리움클래식", R.drawable.etc));
-        coinInfos.add(new CoinInfoHuobi("SRN / 시린토큰", R.drawable.srn));
-        coinInfos.add(new CoinInfoHuobi("STEEM / 스팀", R.drawable.steem));
-        coinInfos.add(new CoinInfoHuobi("QTUM / 퀀텀", R.drawable.qtum));
-        coinInfos.add(new CoinInfoHuobi("MFT / 메인프레임", R.drawable.mft));
-        coinInfos.add(new CoinInfoHuobi("COSM / 코스모코인", R.drawable.cosmo));
-        coinInfos.add(new CoinInfoHuobi("IGNIS / 이그니스", R.drawable.ignis));
-        coinInfos.add(new CoinInfoHuobi("ENJ / 엔진코인", R.drawable.enj));
-        coinInfos.add(new CoinInfoHuobi("KNC / 카이버네트워크", R.drawable.knc));
-        coinInfos.add(new CoinInfoHuobi("NEO / 네오", R.drawable.neo));
-        coinInfos.add(new CoinInfoHuobi("DCR / 디크레드", R.drawable.dcr));
-        coinInfos.add(new CoinInfoHuobi("CHZ / 칠리즈", R.drawable.chz));
-        coinInfos.add(new CoinInfoHuobi("LTC / 라이트코인", R.drawable.ltc));
-        coinInfos.add(new CoinInfoHuobi("CRE / 캐리프로토콜", R.drawable.cre));
-        coinInfos.add(new CoinInfoHuobi("KMD / 코모도", R.drawable.kmd));
-        coinInfos.add(new CoinInfoHuobi("MED / 메디블록", R.drawable.med));
-        coinInfos.add(new CoinInfoHuobi("LSK / 리스크", R.drawable.lsk));
-        coinInfos.add(new CoinInfoHuobi("AERGO / 아르고", R.drawable.aergo));
-        coinInfos.add(new CoinInfoHuobi("POWR / 파워렛저", R.drawable.powr));
-        coinInfos.add(new CoinInfoHuobi("MANA / 디센트럴랜드", R.drawable.mana));
-        coinInfos.add(new CoinInfoHuobi("PXL / 픽셀", R.drawable.pxl));
-        coinInfos.add(new CoinInfoHuobi("ATOM / 코스모스", R.drawable.atom));
-        coinInfos.add(new CoinInfoHuobi("BAT / 베이직어텐션토큰", R.drawable.bat));
-        coinInfos.add(new CoinInfoHuobi("STPT / 에스티피", R.drawable.stpt));
-        coinInfos.add(new CoinInfoHuobi("MOC / 모스코인", R.drawable.moc));
-        coinInfos.add(new CoinInfoHuobi("LOOM / 룸네트워크", R.drawable.loom));
-        coinInfos.add(new CoinInfoHuobi("CVC / 시빅", R.drawable.cvc));
-        coinInfos.add(new CoinInfoHuobi("STMX / 스톰엑스", R.drawable.stmx));
-        coinInfos.add(new CoinInfoHuobi("REP / 어거", R.drawable.rep));
-        coinInfos.add(new CoinInfoHuobi("ICX / 아이콘", R.drawable.icx));
-        coinInfos.add(new CoinInfoHuobi("IQ / 에브리피디아", R.drawable.iq));
-        coinInfos.add(new CoinInfoHuobi("EDR / 엔도르", R.drawable.edr));
-        coinInfos.add(new CoinInfoHuobi("ZRX / 제로엑스", R.drawable.zrx));
-        coinInfos.add(new CoinInfoHuobi("UPP / 센티넬프로토콜", R.drawable.upp));
-        coinInfos.add(new CoinInfoHuobi("ORBS / 오브스", R.drawable.orbs));
-        coinInfos.add(new CoinInfoHuobi("OMG / 오미세고", R.drawable.omg));
-        coinInfos.add(new CoinInfoHuobi("GNT / 골렘", R.drawable.gnt));
-        coinInfos.add(new CoinInfoHuobi("XEM / 넴", R.drawable.xem));
-        coinInfos.add(new CoinInfoHuobi("GTO / 기프토", R.drawable.gto));
-        coinInfos.add(new CoinInfoHuobi("MTL / 메탈", R.drawable.mtl));
-        coinInfos.add(new CoinInfoHuobi("EMC2 / 아인스타이늄", R.drawable.emc2));
-        coinInfos.add(new CoinInfoHuobi("SNT / 스테이터스네트워크토큰", R.drawable.snt));
-        coinInfos.add(new CoinInfoHuobi("ARDR / 아더", R.drawable.ardr));
-        coinInfos.add(new CoinInfoHuobi("GAS / 가스", R.drawable.gas));
-        coinInfos.add(new CoinInfoHuobi("BTT / 비트토렌트", R.drawable.btt));
-        coinInfos.add(new CoinInfoHuobi("NPXS / 펀디엑스", R.drawable.npxs));
-        coinInfos.add(new CoinInfoHuobi("VTC / 버트코인", R.drawable.vtc));
-        coinInfos.add(new CoinInfoHuobi("OST / 오에스티", R.drawable.ost));
-        coinInfos.add(new CoinInfoHuobi("STORJ / 스토리지", R.drawable.storj));
-        coinInfos.add(new CoinInfoHuobi("ADX / 애드엑스", R.drawable.adx));
-        coinInfos.add(new CoinInfoHuobi("RFR / 리퍼리움", R.drawable.rfr));
-        coinInfos.add(new CoinInfoHuobi("WAVES / 웨이브", R.drawable.waves));
-        coinInfos.add(new CoinInfoHuobi("IOTA / 아이오타", R.drawable.iota));
-        coinInfos.add(new CoinInfoHuobi("MCO / 크립토닷컴", R.drawable.mco));
-        coinInfos.add(new CoinInfoHuobi("SBD / 스팀달러", R.drawable.steem));
-
-        for (int i = 0; i < coinInfos.size(); i++) {
-            coinInfos.get(i).setCoinData(tickersHuobi.get(i));
-            println("Huobi coinInfos name check " + i  + " - " + coinInfos.get(i).getCoinName());
-            // 아예 출력 안 되는데?
-            // arrayMakerUpbit 자체가 실행 안 되는 거 같은데
-        }
-
-        if (restartApp) {
-            for (int i = 0; i < coinInfos.size(); i++)
-                coinInfos.get(i).setCoinViewCheck(pref.getBoolean(coinInfos.get(i).getCoinName(), true));
-
-            if (!isEmpty(coinInfosCoinone) && !isEmpty(coinInfosBithumb) && !isEmpty(coinInfosHuobi));
-            restartApp = false;
-        }
-
-        if (refreshedHuobi) {
-            for (int i = 0; i < coinInfos.size(); i++) {
-                String temp1 = coinInfosHuobi.get(i).getCoinName();
-                String temp2 = coinInfos.get(i).getCoinName();
-
-                if (!(temp1.equals(temp2))) { // 순서가 바뀐 것
-                    for (int j = i; j < coinInfos.size(); j++) {
-                        if (temp1.equals(coinInfos.get(j).getCoinName()))
-                            Collections.swap(coinInfos, i, j);
-                    }
-                }
-            }
-
-            for (int i = 0; i < coinInfos.size(); i++)
-                coinInfos.get(i).setCoinViewCheck(coinInfosHuobi.get(i).getCoinViewCheck());
-        }
-
-        return coinInfos;
-    } */
 
     public static boolean isEmpty(Object object) {
         if (object == null)

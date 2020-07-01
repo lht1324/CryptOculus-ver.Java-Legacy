@@ -159,8 +159,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
 
         if (!isEmpty(coinInfosCoinone)) {
-            for (int i = 0; i < coinInfosCoinone.size(); i++)
+            for (int i = 0; i < coinInfosCoinone.size(); i++) {
+                editor.putInt(coinInfosCoinone.get(i).getCoinName() + "position", i);
                 editor.putBoolean(coinInfosCoinone.get(i).getCoinName(), coinInfosCoinone.get(i).getCoinViewCheck());
+            }
+            // i를 저장한다
+            // key는 coinName으로
+            // 다시 시작했을 때 ArrayMaker에서 저장한 걸 불러와서 배열에 저장한다
+            // 그 배열의 순서대로 정렬한다
 
             editor.commit();
         }
@@ -169,8 +175,10 @@ public class MainActivity extends AppCompatActivity {
         editor = pref.edit();
 
         if (!isEmpty(coinInfosBithumb)) {
-            for (int i = 0; i < coinInfosBithumb.size(); i++)
+            for (int i = 0; i < coinInfosBithumb.size(); i++) {
+                editor.putInt(coinInfosBithumb.get(i).getCoinName() + "position", i);
                 editor.putBoolean(coinInfosBithumb.get(i).getCoinName(), coinInfosBithumb.get(i).getCoinViewCheck());
+            }
 
             editor.commit();
         }
@@ -179,8 +187,10 @@ public class MainActivity extends AppCompatActivity {
         editor = pref.edit();
 
         if (!isEmpty(coinInfosHuobi)) {
-            for (int i = 0; i < coinInfosHuobi.size(); i++)
+            for (int i = 0; i < coinInfosHuobi.size(); i++) {
+                editor.putInt(coinInfosHuobi.get(i).getCoinName() + "position", i);
                 editor.putBoolean(coinInfosHuobi.get(i).getCoinName(), coinInfosHuobi.get(i).getCoinViewCheck());
+            }
 
             editor.commit();
         }

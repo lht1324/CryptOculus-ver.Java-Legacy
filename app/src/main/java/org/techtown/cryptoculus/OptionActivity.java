@@ -89,13 +89,13 @@ public class OptionActivity extends AppCompatActivity implements DataTransferOpt
         intent.putExtra("URL", URL);
 
         if (URL.equals(coinoneAddress))
-            intent.putExtra("coinInfosCoinone", optionAdapter.getCoinInfos());
+            intent.putExtra("coinInfosCoinone", optionAdapter.getSortedCoinInfos());
 
         if (URL.equals(bithumbAddress))
-            intent.putExtra("coinInfosBithumb", optionAdapter.getCoinInfos());
+            intent.putExtra("coinInfosBithumb", optionAdapter.getSortedCoinInfos());
 
         if (URL.equals(huobiAddress))
-            intent.putExtra("coinInfosHuobi", optionAdapter.getCoinInfos());
+            intent.putExtra("coinInfosHuobi", optionAdapter.getSortedCoinInfos());
 
         setResult(2, intent);
         finish();
