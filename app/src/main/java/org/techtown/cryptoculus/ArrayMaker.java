@@ -103,7 +103,7 @@ public class ArrayMaker {
         coinInfos.add(new CoinInfoCoinone(currencyList.ksc, "케이스타라이브", R.drawable.ksc));
         coinInfos.add(new CoinInfoCoinone(currencyList.wiken, "위드", R.drawable.wiken));
 
-        if (restartApp && !isEmpty(coinInfosCoinone)) {
+        if (restartApp) {
             int[] getPositions = new int[coinInfos.size()];
             ArrayList<CoinInfoCoinone> temp = new ArrayList<CoinInfoCoinone>();
 
@@ -247,7 +247,7 @@ public class ArrayMaker {
         coinInfos.add(new CoinInfoBithumb(currencyList.XEM, "XEM / 넴", R.drawable.xem));
         coinInfos.add(new CoinInfoBithumb(currencyList.BHP, "BHP / 비에이치피", R.drawable.bhp));
 
-        if (restartApp && !isEmpty(coinInfosBithumb)) {
+        if (restartApp) {
             int[] getPositions = new int[coinInfos.size()];
             ArrayList<CoinInfoBithumb> temp = new ArrayList<CoinInfoBithumb>();
 
@@ -291,7 +291,7 @@ public class ArrayMaker {
     public ArrayList<CoinInfoHuobi> makeArrayHuobi(ArrayList<TickerHuobi> tickersHuobi) {
         ArrayList<CoinInfoHuobi> coinInfos = new ArrayList<CoinInfoHuobi>();
         CurrencysHuobi currencysHuobi = new CurrencysHuobi();
-        SharedPreferences pref = mContext.getSharedPreferences("saveUpbit", MODE_PRIVATE);
+        SharedPreferences pref = mContext.getSharedPreferences("saveHuobi", MODE_PRIVATE);
 
         for (int i = 0; i < tickersHuobi.size(); i++) {
             TickerHuobi ticker = tickersHuobi.get(i);
@@ -380,7 +380,7 @@ public class ArrayMaker {
             coinInfos.get(i).setCoinData(ticker);
         }
 
-        if (restartApp && !isEmpty(coinInfosHuobi)) {
+        if (restartApp) {
             int[] getPositions = new int[coinInfos.size()];
             ArrayList<CoinInfoHuobi> temp = new ArrayList<CoinInfoHuobi>();
 

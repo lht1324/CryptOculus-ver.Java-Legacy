@@ -154,27 +154,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         SharedPreferences pref;
-
-        pref = getSharedPreferences("saveCoinone", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
+        SharedPreferences.Editor editor;
 
         if (!isEmpty(coinInfosCoinone)) {
+            pref = getSharedPreferences("saveCoinone", Activity.MODE_PRIVATE);
+            editor = pref.edit();
+
             for (int i = 0; i < coinInfosCoinone.size(); i++) {
                 editor.putInt(coinInfosCoinone.get(i).getCoinName() + "position", i);
                 editor.putBoolean(coinInfosCoinone.get(i).getCoinName(), coinInfosCoinone.get(i).getCoinViewCheck());
             }
-            // i를 저장한다
-            // key는 coinName으로
-            // 다시 시작했을 때 ArrayMaker에서 저장한 걸 불러와서 배열에 저장한다
-            // 그 배열의 순서대로 정렬한다
 
             editor.commit();
         }
 
-        pref = getSharedPreferences("saveBithumb", Activity.MODE_PRIVATE);
-        editor = pref.edit();
-
         if (!isEmpty(coinInfosBithumb)) {
+            pref = getSharedPreferences("saveBithumb", Activity.MODE_PRIVATE);
+            editor = pref.edit();
+
             for (int i = 0; i < coinInfosBithumb.size(); i++) {
                 editor.putInt(coinInfosBithumb.get(i).getCoinName() + "position", i);
                 editor.putBoolean(coinInfosBithumb.get(i).getCoinName(), coinInfosBithumb.get(i).getCoinViewCheck());
@@ -183,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
         }
 
-        pref = getSharedPreferences("saveHuobi", Activity.MODE_PRIVATE);
-        editor = pref.edit();
-
         if (!isEmpty(coinInfosHuobi)) {
+            pref = getSharedPreferences("saveHuobi", Activity.MODE_PRIVATE);
+            editor = pref.edit();
+
             for (int i = 0; i < coinInfosHuobi.size(); i++) {
                 editor.putInt(coinInfosHuobi.get(i).getCoinName() + "position", i);
                 editor.putBoolean(coinInfosHuobi.get(i).getCoinName(), coinInfosHuobi.get(i).getCoinViewCheck());
@@ -377,10 +374,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (URL.equals(huobiAddress)) {
-            println("response => " + response);
             TickerFormatHuobi tickerFormatHuobi = gson.fromJson(response, TickerFormatHuobi.class);
-            // Expected BEGIN_OBJECT but was BEGIN_ARRAY (Object를 예상했는데 Array가 왔다)
-            // symbol을 simbol로 오타를 쳤으니 안 들어오지...
             ArrayList<TickerHuobi> tickersHuobi = new ArrayList<TickerHuobi>();
 
             for (int i = 0; i < tickerFormatHuobi.data.size(); i++) {

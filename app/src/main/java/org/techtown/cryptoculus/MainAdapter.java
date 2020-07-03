@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,21 +56,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             // 배열에 이미지 화폐 순서대로 넣어놓고 꺼내서 삽입
             try {
                 DecimalFormat formatter = new DecimalFormat("###,###.##");
+
                 textView2.setText("현재가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().last)) + "원");
+                textView3.setText("거래량 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().volume)));
 
-                String result = Double.toString(Double.parseDouble(coinInfo.getCoinData().last) - Double.parseDouble(coinInfo.getCoinData().yesterday_last));
-
-                if (Double.parseDouble(result) < 0) {
-                    result = Double.toString(-1 * Double.parseDouble(result));
-                    textView4.setText("-" + formatter.format(Double.parseDouble(result)) + "원");
-                    textView4.setTextColor(Color.parseColor("#FF0000"));
-                }
-
-                else {
-                    textView4.setText("+" + formatter.format(Double.parseDouble(result)) + "원");
-                    textView4.setTextColor(Color.parseColor("#0000FF"));
-                }
-
+                textView4.setText("시가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().first)) + "원");
+                textView5.setText("종가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().last)) + "원");
+                textView6.setText("고가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().high)) + "원");
+                textView7.setText("저가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().low)) + "원");
             }
             catch (NumberFormatException e) {
             }
@@ -80,28 +75,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
             // 배열에 이미지 화폐 순서대로 넣어놓고 꺼내서 삽입
             try {
                 DecimalFormat formatter = new DecimalFormat("###,###.##");
-                textView2.setText(formatter.format(Double.parseDouble(coinInfo.getCoinData().closing_price)) + "원");
 
-                String result = Double.toString(Double.parseDouble(coinInfo.getCoinData().closing_price) - Double.parseDouble(coinInfo.getCoinData().prev_closing_price));
+                textView2.setText("현재가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().closing_price)) + "원");
+                textView3.setText("거래량 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().units_traded)));
 
-                if (Double.parseDouble(result) < 0) {
-                    textView3.setText(formatter.format(Double.parseDouble(result)) + "원");
-                    textView3.setTextColor(Color.parseColor("#FF0000"));
-                }
-
-                else {
-                    textView3.setText("+" + formatter.format(Double.parseDouble(result)) + "원");
-                    textView3.setTextColor(Color.parseColor("#0000FF"));
-                }
-
-                if (Double.parseDouble(coinInfo.getCoinData().fluctate_rate_24H) < 0) {
-                    textView4.setText(formatter.format(Double.parseDouble(coinInfo.getCoinData().fluctate_rate_24H)) + "%");
-                    textView4.setTextColor(Color.parseColor("#FF0000"));
-                }
-                else {
-                    textView4.setText("+" + formatter.format(Double.parseDouble(coinInfo.getCoinData().fluctate_rate_24H)) + "%");
-                    textView4.setTextColor(Color.parseColor("#0000FF"));
-                }
+                textView4.setText("시가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().opening_price)) + "원");
+                textView5.setText("종가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().closing_price)) + "원");
+                textView6.setText("고가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().max_price)) + "원");
+                textView7.setText("저가 : " + formatter.format(Double.parseDouble(coinInfo.getCoinData().min_price)) + "원");
             }
             catch (NumberFormatException e) {
             }
