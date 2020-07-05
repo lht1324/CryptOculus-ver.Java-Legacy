@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:padding="5dp"
                 app:srcCompat="@drawable/basic" />
 
@@ -46,16 +46,15 @@
 
                 <TextView
                     android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="현재가"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="거래량"
                     android:textSize="16sp" />
 

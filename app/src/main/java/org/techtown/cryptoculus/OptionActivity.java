@@ -20,6 +20,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.techtown.cryptoculus.coinInfo.CoinInfoBithumb;
+import org.techtown.cryptoculus.coinInfo.CoinInfoCoinone;
+import org.techtown.cryptoculus.coinInfo.CoinInfoHuobi;
+import org.techtown.cryptoculus.function.DataTransferOption;
+import org.techtown.cryptoculus.function.ItemTouchHelperCallback;
+
 public class OptionActivity extends AppCompatActivity implements DataTransferOption, TextWatcher {
 
     OptionAdapter optionAdapter = new OptionAdapter(this);

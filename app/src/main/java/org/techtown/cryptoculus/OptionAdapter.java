@@ -16,6 +16,12 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.techtown.cryptoculus.coinInfo.CoinInfoBithumb;
+import org.techtown.cryptoculus.coinInfo.CoinInfoCoinone;
+import org.techtown.cryptoculus.coinInfo.CoinInfoHuobi;
+import org.techtown.cryptoculus.function.DataTransferOption;
+import org.techtown.cryptoculus.function.ItemTouchHelperCallback;
+
 public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.ViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperAdapter {
     ArrayList<Object> coinInfos = new ArrayList<Object>(); // editText가 비었을 때 리사이클러뷰에 들어가는 배열, 최종 데이터 저장용
     ArrayList<Object> filteredCoinInfos = new ArrayList<Object>(); // 검색했을 때 리사이클러뷰에 들어가는 배열

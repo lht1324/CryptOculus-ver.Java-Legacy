@@ -28,13 +28,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.techtown.cryptoculus.coinInfo.CoinInfoBithumb;
+import org.techtown.cryptoculus.coinInfo.CoinInfoCoinone;
+import org.techtown.cryptoculus.coinInfo.CoinInfoHuobi;
+import org.techtown.cryptoculus.currencys.CurrencysCoinone;
+import org.techtown.cryptoculus.function.ArrayMaker;
+import org.techtown.cryptoculus.ticker.TickerFormatBithumb;
+import org.techtown.cryptoculus.ticker.TickerFormatHuobi;
+import org.techtown.cryptoculus.ticker.TickerHuobi;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isEmpty(coinInfosCoinone)) {
             pref = getSharedPreferences("saveCoinone", Activity.MODE_PRIVATE);
             editor = pref.edit();
+            editor.putBoolean("isEmptyCoinone", false);
 
             for (int i = 0; i < coinInfosCoinone.size(); i++) {
                 editor.putInt(coinInfosCoinone.get(i).getCoinName() + "position", i);
@@ -171,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isEmpty(coinInfosBithumb)) {
             pref = getSharedPreferences("saveBithumb", Activity.MODE_PRIVATE);
             editor = pref.edit();
+            editor.putBoolean("isEmptyBithumb", false);
 
             for (int i = 0; i < coinInfosBithumb.size(); i++) {
                 editor.putInt(coinInfosBithumb.get(i).getCoinName() + "position", i);
@@ -183,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isEmpty(coinInfosHuobi)) {
             pref = getSharedPreferences("saveHuobi", Activity.MODE_PRIVATE);
             editor = pref.edit();
+            editor.putBoolean("isEmptyHuobi", false);
 
             for (int i = 0; i < coinInfosHuobi.size(); i++) {
                 editor.putInt(coinInfosHuobi.get(i).getCoinName() + "position", i);
@@ -429,9 +435,9 @@ public class MainActivity extends AppCompatActivity {
         if (object instanceof List)
             return ((List<?>) object).isEmpty();
 
-        if (object instanceof Object[]) {
+        if (object instanceof Object[])
             return (((Object[]) object).length == 0);
-        }
+
         return false;
     }
 

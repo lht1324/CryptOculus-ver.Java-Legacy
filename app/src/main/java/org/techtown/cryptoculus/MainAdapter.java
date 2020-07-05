@@ -1,6 +1,5 @@
 package org.techtown.cryptoculus;
 
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,23 +7,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperAdapter {
+import org.techtown.cryptoculus.coinInfo.CoinInfoBithumb;
+import org.techtown.cryptoculus.coinInfo.CoinInfoCoinone;
+import org.techtown.cryptoculus.coinInfo.CoinInfoHuobi;
+
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     ArrayList<Object> coinInfos = new ArrayList<Object>();
 
     String coinoneAddress = "https://api.coinone.co.kr/ticker?currency=all";
     String bithumbAddress = "https://api.bithumb.com/public/ticker/ALL_KRW";
     String huobiAddress = "https://api-cloud.huobi.co.kr/market/tickers";
     String URL;
-    // String URL = coinoneAddress; // 코인원인지 빗썸 상태인지 구분하는데 사용
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -146,21 +145,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
 
     public void setURL(String URL) {
         this.URL = URL;
-    }
-
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(coinInfos, i, i + 1);
-            }
-        }
-        else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(coinInfos, i, i - 1);
-            }
-        }
-        notifyItemMoved(fromPosition, toPosition);
-        return true;
     }
 
     public void println(String data) {
