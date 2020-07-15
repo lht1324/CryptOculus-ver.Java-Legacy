@@ -208,14 +208,20 @@ public class OptionActivity extends AppCompatActivity implements DataTransferOpt
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        if (URL.equals(coinoneAddress))
+        if (URL.equals(coinoneAddress)) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFF0079FE));
+            getSupportActionBar().setTitle("Coinone");
+        }
 
-        if (URL.equals(bithumbAddress))
+        if (URL.equals(bithumbAddress)) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFFF37321));
+            getSupportActionBar().setTitle("Bithumb");
+        }
 
-        if (URL.equals(huobiAddress))
+        if (URL.equals(huobiAddress)) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xFF1C2143));
+            getSupportActionBar().setTitle("Huobi Korea");
+        }
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(optionAdapter);
