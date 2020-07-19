@@ -38,9 +38,9 @@ public class OptionActivity extends AppCompatActivity implements DataTransferOpt
 
     ArrayList<Object> coinInfos = new ArrayList<Object>();
 
-    String coinoneAddress = "https://api.coinone.co.kr/ticker?currency=all";
-    String bithumbAddress = "https://api.bithumb.com/public/ticker/ALL_KRW";
-    String huobiAddress = "https://api-cloud.huobi.co.kr/market/tickers";
+    String coinoneAddress = "https://api.coinone.co.kr/";
+    String bithumbAddress = "https://api.bithumb.com/";
+    String huobiAddress = "https://api-cloud.huobi.co.kr/";
     String URL = coinoneAddress; // 코인원인지 빗썸 상태인지 구분하는데 사용
 
     protected void onCreate(Bundle savedInstanceState) {

@@ -20,9 +20,9 @@ import org.techtown.cryptoculus.coinInfo.CoinInfoHuobi;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     ArrayList<Object> coinInfos = new ArrayList<Object>();
 
-    String coinoneAddress = "https://api.coinone.co.kr/ticker?currency=all";
-    String bithumbAddress = "https://api.bithumb.com/public/ticker/ALL_KRW";
-    String huobiAddress = "https://api-cloud.huobi.co.kr/market/tickers";
+    String coinoneAddress = "https://api.coinone.co.kr/";
+    String bithumbAddress = "https://api.bithumb.com/";
+    String huobiAddress = "https://api-cloud.huobi.co.kr/";
     String URL;
 
     static class ViewHolder extends RecyclerView.ViewHolder {

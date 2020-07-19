@@ -20,13 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.techtown.cryptoculus.coinInfo.CoinInfoBithumb;
@@ -34,18 +27,22 @@ import org.techtown.cryptoculus.coinInfo.CoinInfoCoinone;
 import org.techtown.cryptoculus.coinInfo.CoinInfoHuobi;
 import org.techtown.cryptoculus.currencys.CurrencysCoinone;
 import org.techtown.cryptoculus.function.ArrayMaker;
+import org.techtown.cryptoculus.function.Retrofit2Interface;
 import org.techtown.cryptoculus.ticker.TickerFormatBithumb;
 import org.techtown.cryptoculus.ticker.TickerFormatHuobi;
 import org.techtown.cryptoculus.ticker.TickerHuobi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-    static RequestQueue requestQueue;
+public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     MainAdapter adapter;
@@ -65,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<CoinInfoBithumb> coinInfosBithumb;
     ArrayList<CoinInfoHuobi> coinInfosHuobi;
 
-    String coinoneAddress = "https://api.coinone.co.kr/ticker?currency=all";
-    String bithumbAddress = "https://api.bithumb.com/public/ticker/ALL_KRW";
-    String huobiAddress = "https://api-cloud.huobi.co.kr/market/tickers";
+    String coinoneAddress = "https://api.coinone.co.kr/";
+    String bithumbAddress = "https://api.bithumb.com/";
+    String huobiAddress = "https://api-cloud.huobi.co.kr/";
     String URL = coinoneAddress; // 코인원인지 빗썸 상태인지 구분하는데 사용
     String chartName = "BTC";
 
@@ -296,52 +293,43 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getData() {
+    public void getData() { // 여기 한 곳에서 퉁칠 수 있겠는데?
         spinnerAdapterItems = new ArrayList<String>(); // 스피너 내부에 삽입되는 mObjects를 초기화
         adapter = new MainAdapter(); // 뷰가 뒤섞이는 걸 방지해준다
         spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, spinnerAdapterItems); // 초기화된 Array를 삽입해 mObjects를 초기화
 
         adapter.setURL(URL);
 
-        if (URL.equals(coinoneAddress) || URL.equals(bithumbAddress) || URL.equals(huobiAddress)) {
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create());
 
-            StringRequest request = makeRequest(URL);
-            request.setShouldCache(false);
+        Retrofit retrofit = builder.build();
 
-            if (requestQueue == null) {
-                requestQueue = Volley.newRequestQueue(getApplicationContext());
+        Retrofit2Interface client = retrofit.create(Retrofit2Interface.class);
+
+        Call<Object> call = client.getCoinone("all");
+
+        if (URL.equals(coinoneAddress))
+            call = client.getCoinone("all");
+
+        if (URL.equals(bithumbAddress))
+            call = client.getBithumb();
+
+        if (URL.equals(huobiAddress))
+            call = client.getHuobi();
+
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                responseProcess(response.body().toString());
             }
 
-            requestQueue.add(request);
-            println("요청 보냄.");
-        }
-    }
-
-    public StringRequest makeRequest(String url) {
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        println("응답 -> " + response);
-
-                        responseProcess(response);
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        println("에러 -> " + error.getMessage());
-                    }
-                }
-        ) {
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String> ();
-                return params;
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                println("RetrofitCall Failed.");
             }
-        };
-
-        return request;
+        });
     }
 
     public void responseProcess(String response) {
