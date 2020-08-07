@@ -65,12 +65,9 @@ public class MainActivity extends AppCompatActivity {
     String coinoneAddress = "https://api.coinone.co.kr/";
     String bithumbAddress = "https://api.bithumb.com/";
     String huobiAddress = "https://api-cloud.huobi.co.kr/";
-    String URL = coinoneAddress; // 코인원인지 빗썸 상태인지 구분하는데 사용
+    String URL = coinoneAddress; // 어떤 거래소인지 구분하는데 사용
     String chartName = "BTC";
 
-
-    // 추가해야 하는 것
-    // 정렬된 순서 저장 후 불러오기(마무리)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
